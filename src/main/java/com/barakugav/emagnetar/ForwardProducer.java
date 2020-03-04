@@ -8,25 +8,25 @@ import java.util.concurrent.CopyOnWriteArrayList;
 
 public class ForwardProducer extends DefaultProducer {
 
-    private final Cunsumer source;
+    private final Consumer source;
 
     private static final Syncer syncer = new Syncer();
 
     public ForwardProducer(String sourceTopic, String destinationTopic) {
-	this(Cunsumer.newEventCunsumer(sourceTopic), destinationTopic);
+	this(Consumer.newConsumer(sourceTopic), destinationTopic);
     }
 
-    public ForwardProducer(Cunsumer source, String destinationTopic) {
+    public ForwardProducer(Consumer source, String destinationTopic) {
 	super(destinationTopic);
 	this.source = Objects.requireNonNull(source);
 	syncer.register(this);
     }
 
-    public Cunsumer getEventSource() {
+    public Consumer getSource() {
 	return source;
     }
 
-    public void handleEventFromSource(Event event) {
+    protected void handleEventFromSource(Event event) {
 	postEvent(event);
     }
 

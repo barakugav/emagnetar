@@ -1,17 +1,22 @@
 package com.barakugav.emagnetar;
 
-public class DefaultCunsumer extends AbstractConsumer {
+class DefaultConsumer extends AbstractConsumer {
 
     private int curser;
+    private final Topic topic;
 
-    DefaultCunsumer(String topic) {
-	super(topic);
+    DefaultConsumer(String topic) {
+	this.topic = EMagnetar.topic(topic);
 	curser = 0;
     }
 
     @Override
+    public String getTopic() {
+	return topic.name;
+    }
+
+    @Override
     public Event nextEvent() {
-	Topic topic = topic();
 	EventRecord record;
 	synchronized (topic.eventsRecords) {
 	    if (topic.eventsRecords.size() <= curser)

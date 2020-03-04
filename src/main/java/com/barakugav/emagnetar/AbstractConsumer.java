@@ -1,22 +1,11 @@
 package com.barakugav.emagnetar;
 
-abstract class AbstractConsumer implements Cunsumer {
+abstract class AbstractConsumer implements Consumer {
 
-    private final Topic topic;
     private Deserializer deserializer;
 
-    AbstractConsumer(String topic) {
-	this.topic = EMagnetar.topic(topic);
+    AbstractConsumer() {
 	deserializer = Deserializer.getDefault();
-    }
-
-    @Override
-    public String getTopic() {
-	return topic.name;
-    }
-
-    Topic topic() {
-	return topic;
     }
 
     @Override

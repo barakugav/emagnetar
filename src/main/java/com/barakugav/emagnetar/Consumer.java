@@ -1,6 +1,6 @@
 package com.barakugav.emagnetar;
 
-public interface Cunsumer {
+public interface Consumer {
 
     public String getTopic();
 
@@ -10,8 +10,8 @@ public interface Cunsumer {
 
     public void setDeserializer(Deserializer deserializer);
 
-    public static Cunsumer newEventCunsumer(String topic) {
-	return new DefaultCunsumer(topic);
+    public static Consumer newConsumer(String topic) {
+	return new DefaultConsumer(topic);
     }
 
 }

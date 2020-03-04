@@ -18,8 +18,8 @@ public final class EMagnetar {
 	return new DefaultProducer(topic);
     }
 
-    public static Cunsumer newCunsumer(String topic) {
-	return new DefaultCunsumer(topic);
+    public static Consumer newConsumer(String topic) {
+	return new DefaultConsumer(topic);
     }
 
     static Topic topic(String name) {
