@@ -1,10 +1,10 @@
 package com.barakugav.emagnetar;
 
-public class DefaultEventCunsumer extends AbstractEventConsumer {
+public class DefaultCunsumer extends AbstractConsumer {
 
     private int curser;
 
-    DefaultEventCunsumer(String topic) {
+    DefaultCunsumer(String topic) {
 	super(topic);
 	curser = 0;
     }

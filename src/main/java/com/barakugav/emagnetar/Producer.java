@@ -1,6 +1,6 @@
 package com.barakugav.emagnetar;
 
-public interface EventProducer {
+public interface Producer {
 
     public String getTopic();
 
@@ -18,8 +18,8 @@ public interface EventProducer {
 
     public void setSerializer(Serializer serializer);
 
-    public static EventProducer newEventProducer(String topic) {
-	return new DefaultEventProducer(topic);
+    public static Producer newEventProducer(String topic) {
+	return new DefaultProducer(topic);
     }
 
 }

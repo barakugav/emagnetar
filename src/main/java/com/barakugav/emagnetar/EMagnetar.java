@@ -4,22 +4,22 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.concurrent.ConcurrentHashMap;
 
-public class EventCenter {
+public final class EMagnetar {
 
     private final Map<String, Topic> topics;
 
-    private static final EventCenter INSTANCE = new EventCenter();
+    private static final EMagnetar INSTANCE = new EMagnetar();
 
-    private EventCenter() {
+    private EMagnetar() {
 	topics = new ConcurrentHashMap<>();
     }
 
-    public static EventProducer newProducer(String topic) {
-	return new DefaultEventProducer(topic);
+    public static Producer newProducer(String topic) {
+	return new DefaultProducer(topic);
     }
 
-    public static EventCunsumer newCunsumer(String topic) {
-	return new DefaultEventCunsumer(topic);
+    public static Cunsumer newCunsumer(String topic) {
+	return new DefaultCunsumer(topic);
     }
 
     static Topic topic(String name) {

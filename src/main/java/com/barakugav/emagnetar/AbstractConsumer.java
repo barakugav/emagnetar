@@ -1,12 +1,12 @@
 package com.barakugav.emagnetar;
 
-abstract class AbstractEventConsumer implements EventCunsumer {
+abstract class AbstractConsumer implements Cunsumer {
 
     private final Topic topic;
     private Deserializer deserializer;
 
-    AbstractEventConsumer(String topic) {
-	this.topic = EventCenter.topic(topic);
+    AbstractConsumer(String topic) {
+	this.topic = EMagnetar.topic(topic);
 	deserializer = Deserializer.getDefault();
     }
 

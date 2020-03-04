@@ -1,12 +1,12 @@
 package com.barakugav.emagnetar;
 
-abstract class AbstractEventProducer implements EventProducer {
+abstract class AbstractProducer implements Producer {
 
     private final Topic topic;
     private Serializer serializer;
 
-    AbstractEventProducer(String topic) {
-	this.topic = EventCenter.topic(topic);
+    AbstractProducer(String topic) {
+	this.topic = EMagnetar.topic(topic);
 	serializer = Serializer.getDefault();
     }
 

@@ -2,9 +2,9 @@ package com.barakugav.emagnetar;
 
 import java.util.Objects;
 
-public class DefaultEventProducer extends AbstractEventProducer {
+public class DefaultProducer extends AbstractProducer {
 
-    DefaultEventProducer(String topic) {
+    DefaultProducer(String topic) {
 	super(topic);
     }
 
