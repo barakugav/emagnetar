@@ -1,0 +1,2 @@
+# EMagnetar
+Event system
