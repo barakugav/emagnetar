@@ -3,6 +3,7 @@ package com.barakugav.emagnetar;
 import java.util.Map;
 import java.util.Objects;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.function.Function;
 
 public final class EMagnetar {
 
@@ -20,6 +21,18 @@ public final class EMagnetar {
 
     public static Consumer newConsumer(String topic) {
 	return new DefaultConsumer(topic);
+    }
+
+    public static Pipeline pipeline(String sourceTopic, String destinationTopic,
+	    Function<? super Event, ? extends Event> pipe) {
+	Objects.requireNonNull(sourceTopic);
+	Objects.requireNonNull(destinationTopic);
+	Objects.requireNonNull(pipe);
+	if (sourceTopic.equals(destinationTopic))
+	    throw new IllegalArgumentException();
+	Pipeline pipeline = new Pipeline(destinationTopic, pipe);
+	topic(sourceTopic).registerPipeline(pipeline);
+	return pipeline;
     }
 
     static Topic topic(String name) {

@@ -21,6 +21,11 @@ public class DefaultSerializer implements Serializer {
 	return serialize0(obj);
     }
 
+    @Override
+    public String toString() {
+	return "DefaultSerializer";
+    }
+
     public static byte[] serialize0(Object obj) {
 	if (obj == null)
 	    return null;

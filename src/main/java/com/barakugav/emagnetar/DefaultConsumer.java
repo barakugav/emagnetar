@@ -12,18 +12,23 @@ class DefaultConsumer extends AbstractConsumer {
 
     @Override
     public String getTopic() {
-	return topic.name;
+	return topic.getName();
     }
 
     @Override
     public Event nextEvent() {
 	EventRecord record;
-	synchronized (topic.eventsRecords) {
-	    if (topic.eventsRecords.size() <= curser)
-		return null;
-	    record = topic.eventsRecords.get(curser++);
+	synchronized (this) {
+	    record = topic.getEventRecord(curser);
+	    if (record != null)
+		curser++;
 	}
-	return Event.valueOf(record, getDeserializer());
+	return record != null ? Event.valueOf(record, getDeserializer()) : null;
+    }
+
+    @Override
+    public String toString() {
+	return "DefaultConsumer[" + getTopic() + "]";
     }
 
 }

@@ -12,16 +12,19 @@ class DefaultProducer extends AbstractProducer {
 
     @Override
     public String getTopic() {
-	return topic.name;
+	return topic.getName();
     }
 
     @Override
     public boolean postEvent(Event event) {
 	Objects.requireNonNull(event);
 	EventRecord record = EventRecord.valueOf(event, getSerializer());
-	synchronized (topic.eventsRecords) {
-	    return topic.eventsRecords.add(record);
-	}
+	return topic.postEventRecord(record);
+    }
+
+    @Override
+    public String toString() {
+	return "DefaultProducer[" + getTopic() + "]";
     }
 
 }

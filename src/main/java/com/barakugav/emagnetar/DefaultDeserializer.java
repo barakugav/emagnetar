@@ -18,6 +18,11 @@ public class DefaultDeserializer implements Deserializer {
     }
 
     @Override
+    public String toString() {
+	return "DefaultDeserializer";
+    }
+
+    @Override
     public Object deserialize(byte[] bytes) throws ClassNotFoundException {
 	return deserialize0(bytes);
     }
