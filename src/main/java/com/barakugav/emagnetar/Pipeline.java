@@ -17,11 +17,11 @@ public class Pipeline {
 	deserializer = Deserializer.getDefault();
     }
 
-    void pipe(EventRecord eventRecord) {
-	Event event = Event.valueOf(eventRecord, deserializer);
-	Event fEvent = pipe.apply(event);
-	EventRecord fEventRecord = EventRecord.valueOf(fEvent, serializer);
-	topic.postEventRecord(fEventRecord);
+    void pipe(EventRecord sourceRecord) {
+	Event sourceEvent = Event.valueOf(sourceRecord, deserializer);
+	Event destinationEvent = pipe.apply(sourceEvent);
+	EventRecord destinationRecord = EventRecord.valueOf(destinationEvent, serializer);
+	topic.postEventRecord(destinationRecord);
     }
 
     public String getDestinationTopic() {

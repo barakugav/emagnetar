@@ -10,14 +10,14 @@ import com.barakugav.util.Holder;
 
 public class HashMapNotifier implements Notifier {
 
-    private final Map<Object, List<Listener>> listenMap;
+    private final Map<Object, List<Listener<?>>> listenMap;
 
     public HashMapNotifier() {
 	listenMap = new ConcurrentHashMap<>(0);
     }
 
     @Override
-    public boolean addListener(Object key, Listener listener) {
+    public boolean addListener(Object key, Listener<?> listener) {
 	Objects.requireNonNull(listener);
 	Holder.Boolean changed = new Holder.Boolean();
 	listenMap.compute(key, (k, listenList) -> {
@@ -30,7 +30,7 @@ public class HashMapNotifier implements Notifier {
     }
 
     @Override
-    public boolean removeListener(Object key, Listener listener) {
+    public boolean removeListener(Object key, Listener<?> listener) {
 	if (listener == null)
 	    return false;
 	Holder.Boolean changed = new Holder.Boolean();
@@ -41,10 +41,11 @@ public class HashMapNotifier implements Notifier {
 	return changed.getBoolean();
     }
 
+    @SuppressWarnings({ "unchecked", "rawtypes" })
     @Override
-    public void notifyListeners(Object key, NotifyEvent event) {
+    public void notifyListeners(Object key, Object event) {
 	Objects.requireNonNull(event);
-	List<Listener> listenList = listenMap.get(key);
+	List<Listener<?>> listenList = listenMap.get(key);
 	if (listenList != null)
 	    for (Listener listener : listenList)
 		listener.notify(event);

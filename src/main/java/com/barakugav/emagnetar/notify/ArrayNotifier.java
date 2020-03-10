@@ -6,12 +6,12 @@ import java.util.Objects;
 public class ArrayNotifier implements Notifier {
 
     private Object[] keys;
-    private Listener[] listeners;
+    private Listener<?>[] listeners;
 
     private int size;
 
     private static final Object[] EMPTY_KEYS_ARRAY = {};
-    private static final Listener[] EMPTY_LISTENERS_ARRAY = {};
+    private static final Listener<?>[] EMPTY_LISTENERS_ARRAY = {};
 
     public ArrayNotifier() {
 	listeners = EMPTY_LISTENERS_ARRAY;
@@ -20,7 +20,7 @@ public class ArrayNotifier implements Notifier {
     }
 
     @Override
-    public synchronized boolean addListener(Object key, Listener listener) {
+    public synchronized boolean addListener(Object key, Listener<?> listener) {
 	Objects.requireNonNull(listener);
 
 	ensureSize(size + 1);
@@ -32,7 +32,7 @@ public class ArrayNotifier implements Notifier {
     }
 
     @Override
-    public synchronized boolean removeListener(Object key, Listener listener) {
+    public synchronized boolean removeListener(Object key, Listener<?> listener) {
 	if (listener == null)
 	    return false;
 	int i;
@@ -56,11 +56,13 @@ public class ArrayNotifier implements Notifier {
 	return true;
     }
 
+    @SuppressWarnings("unchecked")
     @Override
-    public void notifyListeners(Object key, NotifyEvent event) {
+    public void notifyListeners(Object key, Object event) {
 	Objects.requireNonNull(event);
 
 	Object[] tempKeys;
+	@SuppressWarnings("rawtypes")
 	Listener[] tempList;
 	synchronized (this) {
 	    tempKeys = Arrays.copyOf(keys, size);

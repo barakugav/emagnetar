@@ -1,8 +1,8 @@
 package com.barakugav.emagnetar.notify;
 
 @FunctionalInterface
-public interface Listener {
+public interface Listener<E> {
 
-    public void notify(NotifyEvent e);
+    public void notify(E e);
 
 }
