@@ -8,7 +8,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
 
 import com.barakugav.util.Holder;
 
-public class HashMapNotifier implements Notifier {
+public class HashMapNotifier extends AbstractNotifier {
 
     private final Map<Object, List<Listener<?>>> listenMap;
 
@@ -17,7 +17,7 @@ public class HashMapNotifier implements Notifier {
     }
 
     @Override
-    public boolean addListener(Object key, Listener<?> listener) {
+    public boolean add(Object key, Listener<?> listener) {
 	Objects.requireNonNull(listener);
 	Holder.Boolean changed = new Holder.Boolean();
 	listenMap.compute(key, (k, listenList) -> {
@@ -30,7 +30,7 @@ public class HashMapNotifier implements Notifier {
     }
 
     @Override
-    public boolean removeListener(Object key, Listener<?> listener) {
+    public boolean remove(Object key, Listener<?> listener) {
 	if (listener == null)
 	    return false;
 	Holder.Boolean changed = new Holder.Boolean();
@@ -43,7 +43,7 @@ public class HashMapNotifier implements Notifier {
 
     @SuppressWarnings({ "unchecked", "rawtypes" })
     @Override
-    public void notifyListeners(Object key, Object event) {
+    public void notify(Object key, Object event) {
 	Objects.requireNonNull(event);
 	List<Listener<?>> listenList = listenMap.get(key);
 	if (listenList != null)
@@ -57,6 +57,13 @@ public class HashMapNotifier implements Notifier {
 	for (List<?> listenersList : listenMap.values())
 	    listenersList.clear();
 	listenMap.clear();
+    }
+
+    @Override
+    public void clear(Object key) {
+	List<Listener<?>> listenList = listenMap.remove(key);
+	if (listenList != null)
+	    listenList.clear(); // Help GC
     }
 
 }

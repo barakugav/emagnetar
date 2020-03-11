@@ -1,102 +1,57 @@
 package com.barakugav.emagnetar.notify;
 
-import java.util.Arrays;
+import java.util.List;
 import java.util.Objects;
+import java.util.concurrent.CopyOnWriteArrayList;
 
-public class ArrayNotifier implements Notifier {
+import com.barakugav.util.data.Pair;
+import com.barakugav.util.data.Pairs;
 
-    private Object[] keys;
-    private Listener<?>[] listeners;
+public class ArrayNotifier extends AbstractNotifier {
 
-    private int size;
-
-    private static final Object[] EMPTY_KEYS_ARRAY = {};
-    private static final Listener<?>[] EMPTY_LISTENERS_ARRAY = {};
+    private final List<Pair<Object, Listener<?>>> listeners;
 
     public ArrayNotifier() {
-	listeners = EMPTY_LISTENERS_ARRAY;
-	keys = EMPTY_KEYS_ARRAY;
-	size = 0;
+	listeners = new CopyOnWriteArrayList<>();
     }
 
     @Override
-    public synchronized boolean addListener(Object key, Listener<?> listener) {
+    public boolean add(Object key, Listener<?> listener) {
 	Objects.requireNonNull(listener);
-
-	ensureSize(size + 1);
-	keys[size] = key;
-	listeners[size] = listener;
-	size++;
-
-	return true;
+	return listeners.add(Pairs.unmodifiedPair(key, listener));
     }
 
     @Override
-    public synchronized boolean removeListener(Object key, Listener<?> listener) {
-	if (listener == null)
-	    return false;
-	int i;
-	if (key != null) {
-	    for (i = 0; i < size; i++)
-		if (key.equals(keys[i]) && listener.equals(listeners[i]))
-		    break;
-	} else {
-	    for (i = 0; i < size; i++)
-		if (null == keys[i] && listener.equals(listeners[i]))
-		    break;
-	}
-	if (i == size)
-	    return false; // Not found
-
-	keys[i] = keys[size - 1];
-	keys[size - 1] = null;
-	listeners[i] = listeners[size - 1];
-	listeners[size - 1] = null;
-	size--;
-	return true;
+    public boolean remove(Object key, Listener<?> listener) {
+	return listener != null && listeners.remove(Pairs.of(key, listener));
     }
 
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings({ "unchecked", "rawtypes" })
     @Override
-    public void notifyListeners(Object key, Object event) {
+    public void notify(Object key, Object event) {
 	Objects.requireNonNull(event);
-
-	Object[] tempKeys;
-	@SuppressWarnings("rawtypes")
-	Listener[] tempList;
-	synchronized (this) {
-	    tempKeys = Arrays.copyOf(keys, size);
-	    tempList = Arrays.copyOf(listeners, size);
-	}
-
-	int i;
 	if (key != null) {
-	    for (i = 0; i < tempKeys.length; i++)
-		if (key.equals(tempKeys[i]))
-		    tempList[i].notify(event);
+	    for (Pair<Object, Listener<?>> pair : listeners)
+		if (key.equals(pair.getFirst()))
+		    ((Listener) pair.getSecond()).notify(event);
 	} else {
-	    for (i = 0; i < tempKeys.length; i++)
-		if (null == tempKeys[i])
-		    tempList[i].notify(event);
+	    for (Pair<Object, Listener<?>> pair : listeners)
+		if (null == pair.getFirst())
+		    ((Listener) pair.getSecond()).notify(event);
 	}
     }
 
     @Override
-    public synchronized void clear() {
-	for (int i = 0; i < size; i++) {
-	    keys[i] = null;
-	    listeners[i] = null;
-	}
-	size = 0;
-
+    public void clear() {
+	listeners.clear();
     }
 
-    private void ensureSize(int s) {
-	if (listeners.length >= s)
-	    return;
-	int newL = Math.max(1, listeners.length * 2);
-	listeners = Arrays.copyOf(listeners, newL, Listener[].class);
-	keys = Arrays.copyOf(keys, newL, Object[].class);
+    @Override
+    public void clear(Object key) {
+	if (key != null)
+	    listeners.removeIf(p -> key.equals(p.getFirst()));
+	else
+	    listeners.removeIf(p -> null == p.getFirst());
     }
 
 }
