@@ -1,5 +1,10 @@
 package com.barakugav.emagnetar.notify;
 
+/**
+ * 
+ * @author Barak Ugav
+ *
+ */
 public interface Notifier {
 
     public boolean add(Object key, Listener<?> listener);

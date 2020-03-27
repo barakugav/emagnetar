@@ -19,7 +19,7 @@ public class HashMapNotifier extends AbstractNotifier {
     @Override
     public boolean add(Object key, Listener<?> listener) {
 	Objects.requireNonNull(listener);
-	Holder.Boolean changed = new Holder.Boolean();
+	Holder.Bool changed = new Holder.Bool();
 	listenMap.compute(key, (k, listenList) -> {
 	    if (listenList == null)
 		listenList = new CopyOnWriteArrayList<>();
@@ -33,10 +33,10 @@ public class HashMapNotifier extends AbstractNotifier {
     public boolean remove(Object key, Listener<?> listener) {
 	if (listener == null)
 	    return false;
-	Holder.Boolean changed = new Holder.Boolean();
+	Holder.Bool changed = new Holder.Bool();
 	listenMap.compute(key, (k, listenList) -> {
 	    changed.set(listenList != null && listenList.remove(listener));
-	    return listenList.isEmpty() ? null : listenList;
+	    return listenList == null || listenList.isEmpty() ? null : listenList;
 	});
 	return changed.getBoolean();
     }
